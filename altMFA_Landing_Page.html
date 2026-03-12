@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>altMFA — An 8-Week Writing Program in New York City</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;1,8..60,300;1,8..60,400&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1412;
+    --cream: #f6f1eb;
+    --parchment: #ede6dc;
+    --warm: #c9a86c;
+    --warm-dark: #a8864a;
+    --accent: #5e7a4a;
+    --muted: #7a7068;
+    --light-muted: #b0a89e;
+    --divider: #d4ccc2;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- GRAIN OVERLAY --- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px;
+  }
+
+  /* --- NAVIGATION --- */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(246, 241, 235, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--divider);
+    transition: all 0.3s ease;
+  }
+
+  nav .logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  nav .logo span {
+    color: var(--accent);
+  }
+
+  nav .nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+  }
+
+  nav .nav-links a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  nav .nav-links a:hover { color: var(--ink); }
+
+  .nav-apply {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.4rem;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.25s ease;
+  }
+
+  .nav-apply:hover {
+    background: var(--accent);
+  }
+
+  /* --- HERO --- */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8rem 2rem 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(201,168,108,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 12s ease-in-out infinite;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -10%;
+    left: -8%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(139,58,46,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    animation: float 15s ease-in-out infinite reverse;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, -20px); }
+  }
+
+  .hero-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--warm-dark);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.2rem, 8vw, 7rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  .hero h1 span {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    max-width: 540px;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.6s;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 3rem;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.7s;
+  }
+
+  .hero-meta-item {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    color: var(--muted);
+  }
+
+  .hero-meta-item strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .hero-cta {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 1rem 2.8rem;
+    background: var(--ink);
+    color: var(--cream);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.85s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-cta:hover {
+    background: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(94,122,74,0.2);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* --- SECTIONS --- */
+  section {
+    padding: 6rem 2rem;
+  }
+
+  .container {
+    max-width: 920px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-dark);
+    margin-bottom: 1rem;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .section-heading em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* --- GAP / THESIS --- */
+  .thesis {
+    background: var(--parchment);
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .thesis-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .thesis blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.3rem, 3vw, 1.7rem);
+    line-height: 1.6;
+    color: var(--ink);
+    font-weight: 400;
+  }
+
+  .thesis blockquote em { color: var(--accent); }
+
+  .thesis .price-compare {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    align-items: baseline;
+  }
+
+  .price-old {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--light-muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--light-muted);
+  }
+
+  .price-new {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .price-note {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-top: 0.3rem;
+  }
+
+  /* --- PROGRAM GRID --- */
+  .program-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    margin-top: 3rem;
+  }
+
+  .program-card {
+    padding: 2.5rem;
+    background: var(--cream);
+    border: 1px solid var(--divider);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .program-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(26,20,18,0.06);
+  }
+
+  .program-card .card-icon {
+    font-size: 1.6rem;
+    margin-bottom: 1.2rem;
+    display: block;
+  }
+
+  .program-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.01em;
+  }
+
+  .program-card .card-time {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--warm-dark);
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .program-card p {
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .writing-sub-card {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: var(--cream);
+    border-left: 3px solid var(--warm);
+  }
+
+  .writing-sub-card .card-time {
+    margin-bottom: 0;
+  }
+
+  .lens-row {
+    display: flex;
+    gap: 1.2rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--divider);
+    align-items: baseline;
+  }
+
+  .lens-row:first-of-type {
+    margin-top: 1.5rem;
+  }
+
+  .lens-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--accent);
+    min-width: 110px;
+    flex-shrink: 0;
+  }
+
+  .lens-desc {
+    font-size: 0.9rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* --- OUTCOMES --- */
+  .outcomes-list {
+    list-style: none;
+    margin-top: 2.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .outcomes-list li {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid var(--divider);
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+  }
+
+  .outcomes-list li:nth-child(odd) { padding-right: 2.5rem; border-right: 1px solid var(--divider); }
+  .outcomes-list li:nth-child(even) { padding-left: 2.5rem; }
+
+  .outcome-marker {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .outcome-text {
+    font-size: 1rem;
+    color: var(--muted);
+  }
+
+  /* --- WHO IT'S FOR --- */
+  .for-whom {
+    background: var(--parchment);
+    border-top: 1px solid var(--divider);
+    border-bottom: 1px solid var(--divider);
+  }
+
+  .for-list {
+    list-style: none;
+    margin-top: 2.5rem;
+  }
+
+  .for-list li {
+    padding: 1.3rem 0;
+    border-bottom: 1px solid var(--divider);
+    font-size: 1.02rem;
+    color: var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 1.2rem;
+  }
+
+  .for-list li::before {
+    content: '—';
+    color: var(--warm-dark);
+    flex-shrink: 0;
+    font-weight: 600;
+  }
+
+  /* --- SCHEDULE --- */
+  .schedule-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3rem;
+  }
+
+  .schedule-item {
+    padding: 2rem;
+    border: 1px solid var(--divider);
+    background: var(--parchment);
+  }
+
+  .schedule-day {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--warm-dark);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+
+  .schedule-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+  }
+
+  .schedule-time {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+
+  /* --- FOUNDERS --- */
+  .founders-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+  }
+
+  .founder-card {
+    padding: 2.5rem;
+    background: var(--parchment);
+    border: 1px solid var(--divider);
+  }
+
+  .founder-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .founder-role {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--warm-dark);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  .founder-card blockquote {
+    font-style: italic;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    border-left: 2px solid var(--warm);
+    padding-left: 1.2rem;
+  }
+
+  .founder-links {
+    margin-top: 1.2rem;
+    display: flex;
+    gap: 1rem;
+  }
+
+  .founder-links a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s;
+  }
+
+  .founder-links a:hover { border-bottom-color: var(--accent); }
+
+  /* --- WHY --- */
+  .why-section {
+    background: var(--ink);
+    color: var(--cream);
+    text-align: center;
+  }
+
+  .why-section .section-label { color: var(--warm); }
+  .why-section .section-heading { color: var(--cream); }
+  .why-section .section-heading em { color: var(--warm); }
+
+  .why-text {
+    max-width: 620px;
+    margin: 0 auto;
+    color: rgba(246,241,235,0.6);
+    font-size: 1.05rem;
+    line-height: 1.85;
+  }
+
+  /* --- FINAL CTA --- */
+  .final-cta {
+    text-align: center;
+    padding: 8rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .final-cta::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(201,168,108,0.08) 0%, transparent 60%);
+    border-radius: 50%;
+  }
+
+  .final-cta .section-heading {
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin-bottom: 1rem;
+  }
+
+  .final-cta p {
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+  }
+
+  .final-cta .hero-cta {
+    opacity: 1;
+    animation: none;
+  }
+
+  /* --- FOOTER --- */
+  footer {
+    padding: 3rem 2rem;
+    border-top: 1px solid var(--divider);
+    text-align: center;
+  }
+
+  footer p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--light-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* --- RESPONSIVE --- */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    nav .nav-links { display: none; }
+
+    section { padding: 4rem 1.5rem; }
+
+    .program-grid,
+    .founders-grid,
+    .outcomes-list { grid-template-columns: 1fr; }
+
+    .outcomes-list li:nth-child(odd) { padding-right: 0; border-right: none; }
+    .outcomes-list li:nth-child(even) { padding-left: 0; }
+
+    .lenses-grid { grid-template-columns: 1fr 1fr; }
+    .schedule-grid { grid-template-columns: 1fr; }
+
+    .thesis .price-compare { flex-direction: column; gap: 0.5rem; align-items: center; }
+
+    .lens-label { min-width: 90px; }
+  }
+
+  @media (max-width: 480px) {
+    .hero-meta { flex-direction: column; gap: 0.8rem; }
+    .lens-row { flex-direction: column; gap: 0.3rem; }
+    .lens-label { min-width: auto; }
+  }
+
+  /* --- SCROLL ANIMATIONS --- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <div class="logo">alt<span>MFA</span></div>
+  <a href="#apply" class="nav-apply">Apply Now</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <h1><span style="font-style:normal;">alt<span style="color:var(--accent);">MFA</span></span>: An 8-Week Writing Program in New York City</h1>
+  <p class="hero-sub">Improve your writing, develop your taste, and join a community of serious writers.</p>
+  <div class="hero-meta">
+    <span class="hero-meta-item">📍 <strong>In-Person, NYC</strong></span>
+    <span class="hero-meta-item">👥 <strong>10–12 Writers</strong></span>
+    <span class="hero-meta-item">🗓 <strong>April 13 – June 3</strong></span>
+    <span class="hero-meta-item">💰 <strong>$700</strong></span>
+  </div>
+  <a href="#apply" class="hero-cta">Apply for Spring 2026</a>
+</section>
+
+<!-- THESIS -->
+<section class="thesis">
+  <div class="thesis-content reveal">
+    <blockquote>Most writing programs ask you to choose between a casual book club and a two-year, $100,000 MFA. <em>We think there's a better option.</em></blockquote>
+    <div class="price-compare">
+      <div>
+        <div class="price-new" style="color: var(--muted); text-decoration: line-through;">$80,000</div>
+        <div class="price-note">Traditional MFA</div>
+      </div>
+      <div>
+        <div class="price-new">$700</div>
+        <div class="price-note">for 8 weeks</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAM -->
+<section id="program">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-heading" style="font-size: clamp(2rem, 4vw, 2.8rem);">What's Included</div>
+    </div>
+    <div class="program-grid" style="align-items: start;">
+      <div class="program-card reveal" style="background: var(--parchment);">
+        <span style="font-size: 1.6rem; display: block; margin-bottom: 1rem;">✍️</span>
+        <span class="card-time">Twice Weekly</span>
+        <h3 style="font-style: italic; font-size: 1.8rem; margin-bottom: 0.8rem;">Write</h3>
+        <p>Each week includes two writing components designed to build a real, sustained practice.</p>
+
+        <div class="writing-sub-card">
+          <span class="card-time">Wednesday Morning · 7:30–8:30AM</span>
+          <h4 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; margin: 0.4rem 0 0.6rem;">Writing Session</h4>
+          <p>A short, heads-down block of protected writing time. No feedback, no agenda. Just you and other writers, writing.</p>
+        </div>
+
+        <div class="writing-sub-card">
+          <span class="card-time">Wednesday Evening · 7:00–9:00PM</span>
+          <h4 style="font-family: 'Playfair Display', serif; font-size: 1.15rem; font-weight: 600; margin: 0.4rem 0 0.6rem;">Writing Workshop</h4>
+          <p>A structured small-group workshop where you share drafts, give and receive feedback, and work on revision.</p>
+        </div>
+      </div>
+
+      <div class="program-card reveal" style="background: var(--parchment);">
+        <span style="font-size: 1.6rem; display: block; margin-bottom: 1rem;">📚</span>
+        <span class="card-time">Once Weekly</span>
+        <h3 style="font-style: italic; font-size: 1.8rem; margin-bottom: 0.8rem;">Read</h3>
+        <p>Reading like a writer is a skill in itself. Each week, we study two essays through four lenses.</p>
+        <p style="margin-top: 1rem;">The readings include canonical and contemporary writers — Virginia Woolf, Frederick Douglass, and Henry David Thoreau, alongside Zadie Smith, Paul Graham, and Henrik Karlsson.</p>
+
+        <div class="lens-row">
+          <span class="lens-label"><em>Perception</em></span>
+          <span class="lens-desc">What does this writer notice that most people miss?</span>
+        </div>
+        <div class="lens-row">
+          <span class="lens-label"><em>Valuation</em></span>
+          <span class="lens-desc">Why do they care, and how do they make it matter?</span>
+        </div>
+        <div class="lens-row">
+          <span class="lens-label"><em>Position</em></span>
+          <span class="lens-desc">Where do they stand, and how did they earn that ground?</span>
+        </div>
+        <div class="lens-row">
+          <span class="lens-label"><em>Expression</em></span>
+          <span class="lens-desc">How does the way they write reinforce what they're saying?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OUTCOMES -->
+<section id="outcomes">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">What You'll Leave With</div>
+      <div class="section-heading">After <em>8 weeks</em></div>
+    </div>
+    <ul class="outcomes-list reveal">
+      <li><span class="outcome-marker">→</span><span class="outcome-text">A weekly writing habit</span></li>
+      <li><span class="outcome-marker">→</span><span class="outcome-text">A clearer voice</span></li>
+      <li><span class="outcome-marker">→</span><span class="outcome-text">A portfolio of essays</span></li>
+      <li><span class="outcome-marker">→</span><span class="outcome-text">A deeper understanding of structure and argument</span></li>
+      <li><span class="outcome-marker">→</span><span class="outcome-text">A small group of peers invested in your growth</span></li>
+      <li><span class="outcome-marker">→</span><span class="outcome-text">The tools to publish and build an audience online</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- WHO IT'S FOR -->
+<section class="for-whom">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Who This Is For</div>
+      <div class="section-heading">Built for writers with <em>full lives</em></div>
+    </div>
+    <ul class="for-list reveal">
+      <li>Writers based in New York City interested in publishing online — essays, newsletters, creative nonfiction</li>
+      <li>Beginners to early-intermediate writers with a few pieces or ideas they're ready to develop</li>
+      <li>People serious about improving their craft who want structured reading study and real peer feedback</li>
+      <li>People with a day job or full life who want a structured space that works around that, not against it</li>
+    </ul>
+  </div>
+</section>
+
+
+<!-- FOUNDERS -->
+<section id="founders">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Who We Are</div>
+      <div class="section-heading">Two communities. <em>One program.</em></div>
+    </div>
+    <div class="founders-grid">
+      <div class="founder-card reveal">
+        <h3>James Quiambao</h3>
+        <span class="founder-role">Founder, Olive Tree Writing Club</span>
+        <blockquote>For most of my life, I hated writing. Then in college, I read a line that changed everything: "Writing is thinking." Since then, I've written every day for six years, published over 2,000 posts, and hosted over 100 events for more than 1,000 writers.</blockquote>
+        <div class="founder-links">
+          <a href="#">Olive Tree</a>
+          <a href="#">Substack</a>
+          <a href="#">Website</a>
+        </div>
+      </div>
+      <div class="founder-card reveal">
+        <h3>Elena Navarrete</h3>
+        <span class="founder-role">Founder, Close Reading NYC</span>
+        <blockquote>I studied Comparative Literature at Columbia, then spent years keeping a reading practice alive in the margins. Close Reading NYC grew out of that gap — bringing together 150+ readers across nine multi-week cohorts since 2024.</blockquote>
+        <div class="founder-links">
+          <a href="#">Close Reading</a>
+          <a href="#">Substack</a>
+          <a href="#">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why-section">
+  <div class="container reveal">
+    <div class="section-label">Why We Built This</div>
+    <div class="section-heading">The obvious answer was <em>grad school</em></div>
+    <p class="why-text">We both wanted dedicated time to work on our own writing, to study craft seriously, and to do it alongside people who cared as much as we did. Between the cost, the time, and the career interruption, grad school wasn't a real option. So we're building a program that brings it to life — without asking you to put yours on hold.</p>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="apply">
+  <div class="container reveal">
+    <div class="section-label">Spring 2026 Cohort</div>
+    <div class="section-heading">Cohort size is limited to <em>10–12 writers</em></div>
+    <p>April 13 – June 3 · In-Person in NYC · $700</p>
+    <a href="#" class="hero-cta">Apply Now</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>altMFA · New York City · 2026</p>
+</footer>
+
+<script>
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  revealEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
